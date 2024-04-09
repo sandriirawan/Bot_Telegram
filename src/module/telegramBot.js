@@ -1,24 +1,11 @@
-const express = require("express");
-const bodyParser = require("body-parser");
 const TelegramBot = require("node-telegram-bot-api");
-const path = require("path");
-const data = require("./src/data");
 const dotenv = require("dotenv");
+const data = require("../config/data");
 
 dotenv.config();
 
-const app = express();
-const port = process.env.PORT || 3000;
-
 const token = process.env.TOKEN;
 const bot = new TelegramBot(token, { polling: true });
-
-app.use(bodyParser.json());
-
-app.post(`/bot${token}`, (req, res) => {
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
-});
 
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
@@ -210,14 +197,4 @@ function sendVillaTypes(chatId) {
   });
 }
 
-app.get("/", (req, res) => {
-  const data = {
-    success: true,
-    message: "backend is running well",
-  };
-  return res.json(data);
-});
-
-app.listen(port, () => {
-  console.log(`Express server is listening on port ${port}`);
-});
+module.exports = bot;
