@@ -10,9 +10,17 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.post(`/bot${process.env.TOKEN}`, (req, res) => {
+app.post(`/bot/${process.env.TOKEN}`, (req, res) => {
   bot.processUpdate(req.body);
   res.sendStatus(200);
+});
+
+app.get("/tes", (req, res) => {
+  const data = {
+    success: true,
+    message: "backend is running well",
+  };
+  return res.json(data);
 });
 
 app.get("/", (req, res) => {
