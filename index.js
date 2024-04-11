@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const token = process.env.TOKEN;
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token, { polling: false });
 
 app.use(bodyParser.json());
 
@@ -31,47 +31,22 @@ bot.on("message", (msg) => {
       sendCommandsList(chatId);
       break;
     case "Siteplan":
-      const siteplan = data.filter((item) => item.category === 1);
-      siteplan.forEach((item, index) => {
-        setTimeout(() => {
-          bot.sendPhoto(chatId, item.image);
-        }, index * 1000);
-      });
+      sendPhotosByCategory(chatId, 1);
       break;
     case "Pricelist":
-      const pricelist = data.filter((item) => item.category === 2);
-      pricelist.forEach((item, index) => {
-        setTimeout(() => {
-          bot.sendPhoto(chatId, item.image);
-        }, index * 1000);
-      });
+      sendPhotosByCategory(chatId, 2);
       break;
     case "Type Villa":
       sendVillaTypes(chatId);
       break;
     case "Gold":
-      const gold = data.filter((item) => item.category === 3);
-      gold.forEach((item, index) => {
-        setTimeout(() => {
-          bot.sendPhoto(chatId, item.image);
-        }, index * 1000);
-      });
+      sendPhotosByCategory(chatId, 3);
       break;
     case "Platinum":
-      const platinum = data.filter((item) => item.category === 5);
-      platinum.forEach((item, index) => {
-        setTimeout(() => {
-          bot.sendPhoto(chatId, item.image);
-        }, index * 1000);
-      });
+      sendPhotosByCategory(chatId, 5);
       break;
     case "Diamond":
-      const diamond = data.filter((item) => item.category === 4);
-      diamond.forEach((item, index) => {
-        setTimeout(() => {
-          bot.sendPhoto(chatId, item.image);
-        }, index * 1000);
-      });
+      sendPhotosByCategory(chatId, 4);
       break;
     case "Foto Lokasi SMC":
       bot.sendPhoto(chatId, data.image, {
@@ -80,11 +55,9 @@ bot.on("message", (msg) => {
       break;
     case "Website Sagara":
       bot.sendMessage(chatId, "Website of Sagara:");
-      bot.sendPhoto(chatId, data.image, { caption: "Website Screenshot" });
       break;
     case "Copy Writing":
       bot.sendMessage(chatId, "Copywriting Details:");
-      bot.sendPhoto(chatId, data.image, { caption: "Copywriting Info" });
       break;
     case "No Rek SMC":
       const noRekData = data.find((item) => item.id === "15");
@@ -127,6 +100,13 @@ bot.on("message", (msg) => {
       break;
   }
 });
+
+function sendPhotosByCategory(chatId, category) {
+  const filteredData = data.filter((item) => item.category === category);
+  filteredData.forEach((item, index) => {
+    bot.sendPhoto(chatId, item.image);
+  });
+}
 
 function sendGoogleMapsMessage(chatId) {
   const message = `
@@ -202,6 +182,15 @@ function sendVillaTypes(chatId) {
   });
 }
 
+function setWebhook() {
+  const webhookUrl = `${process.env.WEBHOOK_URL}/bot${token}`;
+  bot.setWebHook(webhookUrl).then(() => {
+    console.log(`Webhook berhasil diatur ke ${webhookUrl}`);
+  }).catch((error) => {
+    console.error("Gagal mengatur webhook:", error);
+  });
+}
+
 app.get("/", (req, res) => {
   const data = {
     success: true,
@@ -212,7 +201,6 @@ app.get("/", (req, res) => {
 
 app.listen(port, () => {
   console.log(`Express server is listening on port ${port}`);
+  setWebhook();
 });
 
-const webhookUrl = `${process.env.WEBHOOK_URL}/bot${token}`;
-bot.setWebHook(webhookUrl);
