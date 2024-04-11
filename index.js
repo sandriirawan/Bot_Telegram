@@ -14,10 +14,22 @@ const bot = new TelegramBot(token, { polling: true });
 
 app.use(bodyParser.json());
 
-app.post(`/bot/${process.env.TOKEN}`, (req, res) => {
+console.log(process.env.WEBHOOK_URL);
+app.post(`/setwebhook/${token}`, (req, res) => {
+  const url = process.env.WEBHOOK_URL;
+  bot.setWebHook(`${url}/${token}`).then(() => {
+    res.json({ success: true, message: "Webhook set successfully" });
+  }).catch((error) => {
+    res.status(500).json({ success: false, message: "Error setting webhook", error: error });
+  });
+});
+
+app.post(`/${token}`, (req, res) => {
   bot.processUpdate(req.body);
   res.sendStatus(200);
 });
+
+
 
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
@@ -217,7 +229,7 @@ app.get("/", (req, res) => {
   return res.json(data);
 });
 
-bot.setWebHook(`https://embarrassed-duck-hat.cyclic.app/bot/${process.env.TOKEN}`);
+
 
 app.listen(port, () => {
   console.log(`Express server is listening on port ${port}`);
