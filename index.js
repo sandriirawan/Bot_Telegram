@@ -14,11 +14,6 @@ const bot = new TelegramBot(token, { polling: true });
 
 app.use(bodyParser.json());
 
-app.post(`/bot${token}`, (req, res) => {
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
-});
-
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
   const messageText = msg.text;
@@ -60,12 +55,7 @@ bot.on("message", (msg) => {
       bot.sendMessage(chatId, "Copywriting Details:");
       break;
     case "No Rek SMC":
-      const noRekData = data.find((item) => item.id === "15");
-      if (noRekData) {
-        bot.sendPhoto(chatId, noRekData.image, { caption: "No Rekening SMC" });
-      } else {
-        bot.sendMessage(chatId, "Error Server");
-      }
+      sendPhotosByCategory(chatId, 7);
       break;
     case "G Maps SMC":
       sendGoogleMapsMessage(chatId);
@@ -74,7 +64,7 @@ bot.on("message", (msg) => {
       bot.sendMessage(chatId, "Marketing Gallery:");
       break;
     case "Form Survey Mitra":
-      const formSurveyMitra = data.filter((item) => item.category === 7);
+      const formSurveyMitra = data.filter((item) => item.category === 6);
       bot.sendMessage(chatId, formSurveyMitra[0].link);
       break;
     case "Form Survey Agency":
@@ -184,12 +174,20 @@ function sendVillaTypes(chatId) {
 
 function setWebhook() {
   const webhookUrl = `${process.env.WEBHOOK_URL}/bot${token}`;
-  bot.setWebHook(webhookUrl).then(() => {
-    console.log(`Webhook berhasil diatur ke ${webhookUrl}`);
-  }).catch((error) => {
-    console.error("Gagal mengatur webhook:", error);
-  });
+  bot
+    .setWebHook(webhookUrl)
+    .then(() => {
+      console.log(`Webhook berhasil diatur ke ${webhookUrl}`);
+    })
+    .catch((error) => {
+      console.error("Gagal mengatur webhook:", error);
+    });
 }
+
+app.post(`/bot${token}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
 
 app.get("/", (req, res) => {
   const data = {
@@ -203,4 +201,3 @@ app.listen(port, () => {
   console.log(`Express server is listening on port ${port}`);
   setWebhook();
 });
-

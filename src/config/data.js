@@ -123,8 +123,16 @@ const data = [
     id: "16",
     name: "no rekening",
     link: "https://forms.gle/65FKWZp4153wxCRBA",
-    category: 7,
+    category: 6,
     image: "",
+  },
+  {
+    id: "16",
+    name: "no rekening",
+    link: "https://forms.gle/65FKWZp4153wxCRBA",
+    category: 7,
+    image:
+      "https://res.cloudinary.com/ddn4pon2w/image/upload/v1712665573/photo_6100445739512610122_y_i2mynh.jpg ",
   },
 ];
 
