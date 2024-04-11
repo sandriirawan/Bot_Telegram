@@ -111,7 +111,6 @@ bot.on("message", (msg) => {
       break;
     case "Gallery Marketing":
       bot.sendMessage(chatId, "Marketing Gallery:");
-      bot.sendPhoto(chatId, data.image, { caption: "Marketing Gallery" });
       break;
     case "Form Survey Mitra":
       const formSurveyMitra = data.filter((item) => item.category === 7);
@@ -119,27 +118,21 @@ bot.on("message", (msg) => {
       break;
     case "Form Survey Agency":
       bot.sendMessage(chatId, "Agency Survey Form:");
-      bot.sendPhoto(chatId, data.image, { caption: "Survey Form" });
       break;
     case "SOP Marketing":
       bot.sendMessage(chatId, "Marketing SOP:");
-      bot.sendPhoto(chatId, data.image, { caption: "SOP Info" });
       break;
     case "View SMC":
       bot.sendMessage(chatId, "SMC View:");
-      bot.sendPhoto(chatId, data.image, { caption: "SMC View Info" });
       break;
     case "Alur Follow Up":
       bot.sendMessage(chatId, "Follow-up Flow:");
-      bot.sendPhoto(chatId, data.image, { caption: "Follow-up Flow Info" });
       break;
     case "Kontak Admin":
       bot.sendMessage(chatId, "Contact Admin:");
-      bot.sendPhoto(chatId, data.image, { caption: "Admin Contact Info" });
       break;
     case "FAQ Sagara Mountain Ciwidey":
       bot.sendMessage(chatId, "FAQ of Sagara Mountain Ciwidey:");
-      bot.sendPhoto(chatId, data.image, { caption: "FAQ Info" });
       break;
     default:
       bot.sendMessage(chatId, "Unknown command. Type /start to begin.");
