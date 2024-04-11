@@ -1,18 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "./server.js"
-    }
-  ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "./server.js"
-    }
+    { "handle": "filesystem" },
+    { "src": "/bot/(.*)", "dest": "/src/module/telegramBot.js" },
+    { "src": "/bot/(.*)", "dest": "/server.js" },
+    { "src": "/", "dest": "/server.js" }
   ]
 }
