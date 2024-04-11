@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const TelegramBot = require("node-telegram-bot-api");
 const data = require("./src/config/data");
 const bodyParser = require("body-parser");
+const axios = require("axios");
 
 dotenv.config();
 
@@ -17,19 +18,26 @@ app.use(bodyParser.json());
 console.log(process.env.WEBHOOK_URL);
 app.post(`/setwebhook/${token}`, (req, res) => {
   const url = process.env.WEBHOOK_URL;
-  bot.setWebHook(`${url}/${token}`).then(() => {
-    res.json({ success: true, message: "Webhook set successfully" });
-  }).catch((error) => {
-    res.status(500).json({ success: false, message: "Error setting webhook", error: error });
-  });
+  bot
+    .setWebHook(`${url}/${token}`)
+    .then(() => {
+      res.json({ success: true, message: "Webhook set successfully" });
+    })
+    .catch((error) => {
+      res
+        .status(500)
+        .json({
+          success: false,
+          message: "Error setting webhook",
+          error: error,
+        });
+    });
 });
 
 app.post(`/${token}`, (req, res) => {
   bot.processUpdate(req.body);
   res.sendStatus(200);
 });
-
-
 
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
@@ -43,12 +51,22 @@ bot.on("message", (msg) => {
       sendCommandsList(chatId);
       break;
     case "Siteplan":
-      const siteplan = data.filter((item) => item.category === 1);
-      siteplan.forEach((item, index) => {
-        setTimeout(() => {
-          bot.sendPhoto(chatId, item.image);
-        }, index * 1000);
-      });
+      axios
+        .post(
+          "https://embarrassed-duck-hat.cyclic.app/6837976275:AAFolzCfJXdSlsC7JmOlIfE-bHMw-Naithg"
+        )
+        .then((response) => {
+          const siteplan = data.filter((item) => item.category === 1);
+          siteplan.forEach((item, index) => {
+            setTimeout(() => {
+              bot.sendPhoto(chatId, item.image);
+            }, index * 1000);
+          });
+        })
+        .catch((error) => {
+          console.error("Error sending request to API:", error);
+        });
+
       break;
     case "Pricelist":
       const pricelist = data.filter((item) => item.category === 2);
@@ -221,8 +239,6 @@ app.get("/", (req, res) => {
   };
   return res.json(data);
 });
-
-
 
 app.listen(port, () => {
   console.log(`Express server is listening on port ${port}`);
