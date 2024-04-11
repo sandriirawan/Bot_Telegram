@@ -1,12 +1,9 @@
-const express = require("express");
-const dotenv = require("dotenv");
 const TelegramBot = require("node-telegram-bot-api");
+const http = require("http");
+const dotenv = require("dotenv");
 const data = require("./src/config/data");
 
 dotenv.config();
-
-const app = express();
-const port = process.env.PORT || 3000;
 
 const token = process.env.TOKEN;
 const bot = new TelegramBot(token, { polling: true });
@@ -58,7 +55,7 @@ bot.on("message", (msg) => {
       });
       break;
     case "Diamond":
-      const diamond = data.filter((item) => item.category === 5);
+      const diamond = data.filter((item) => item.category === 4);
       diamond.forEach((item, index) => {
         setTimeout(() => {
           bot.sendPhoto(chatId, item.image);
@@ -201,14 +198,13 @@ function sendVillaTypes(chatId) {
   });
 }
 
-app.get("/", (req, res) => {
-  const data = {
-    success: true,
-    message: "backend is running well",
-  };
-  return res.json(data);
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "application/json");
+  res.end(JSON.stringify({ success: true, message: "Backend is running well" }));
 });
 
-app.listen(port, () => {
-  console.log(`Express server is listening on port ${port}`);
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
