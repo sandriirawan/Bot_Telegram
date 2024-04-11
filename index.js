@@ -24,13 +24,11 @@ app.post(`/setwebhook/${token}`, (req, res) => {
       res.json({ success: true, message: "Webhook set successfully" });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: "Error setting webhook",
-          error: error,
-        });
+      res.status(500).json({
+        success: false,
+        message: "Error setting webhook",
+        error: error,
+      });
     });
 });
 
@@ -53,7 +51,7 @@ bot.on("message", (msg) => {
     case "Siteplan":
       axios
         .post(
-          "https://embarrassed-duck-hat.cyclic.app/6837976275:AAFolzCfJXdSlsC7JmOlIfE-bHMw-Naithg"
+          "https://embarrassed-duck-hat.cyclic.app/setwebhook/6837976275:AAFolzCfJXdSlsC7JmOlIfE-bHMw-Naithg"
         )
         .then((response) => {
           const siteplan = data.filter((item) => item.category === 1);
