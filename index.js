@@ -1,12 +1,23 @@
-const TelegramBot = require("node-telegram-bot-api");
-const http = require("http");
+const express = require("express");
 const dotenv = require("dotenv");
+const TelegramBot = require("node-telegram-bot-api");
 const data = require("./src/config/data");
+const bodyParser = require("body-parser");
 
 dotenv.config();
 
+const app = express();
+const port = process.env.PORT || 3000;
+
 const token = process.env.TOKEN;
 const bot = new TelegramBot(token, { polling: true });
+
+app.use(bodyParser.json());
+
+app.post(`/bot/${process.env.TOKEN}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
 
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
@@ -198,13 +209,16 @@ function sendVillaTypes(chatId) {
   });
 }
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify({ success: true, message: "Backend is running well" }));
+app.get("/", (req, res) => {
+  const data = {
+    success: true,
+    message: "backend is running well",
+  };
+  return res.json(data);
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+bot.setWebHook(`https://embarrassed-duck-hat.cyclic.app/bot/${process.env.TOKEN}`);
+
+app.listen(port, () => {
+  console.log(`Express server is listening on port ${port}`);
 });
