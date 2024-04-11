@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const token = process.env.TOKEN;
-const bot = new TelegramBot(token, { polling: false });
+const bot = new TelegramBot(token, { polling: true });
 
 app.use(bodyParser.json());
 
