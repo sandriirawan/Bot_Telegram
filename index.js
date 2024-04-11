@@ -49,22 +49,12 @@ bot.on("message", (msg) => {
       sendCommandsList(chatId);
       break;
     case "Siteplan":
-      axios
-        .post(
-          "https://embarrassed-duck-hat.cyclic.app/setwebhook/6837976275:AAFolzCfJXdSlsC7JmOlIfE-bHMw-Naithg"
-        )
-        .then((response) => {
-          const siteplan = data.filter((item) => item.category === 1);
-          siteplan.forEach((item, index) => {
-            setTimeout(() => {
-              bot.sendPhoto(chatId, item.image);
-            }, index * 1000);
-          });
-        })
-        .catch((error) => {
-          console.error("Error sending request to API:", error);
-        });
-
+      const siteplan = data.filter((item) => item.category === 1);
+      siteplan.forEach((item, index) => {
+        setTimeout(() => {
+          bot.sendPhoto(chatId, item.image);
+        }, index * 1000);
+      });
       break;
     case "Pricelist":
       const pricelist = data.filter((item) => item.category === 2);
